@@ -1,33 +1,38 @@
-import { devToolsEnhancer } from "@redux-devtools/extension";
-import { combineReducers, createStore } from "redux";
+import { configureStore, combineReducers} from "@reduxjs/toolkit";
+import { 
+    persistReducer, 
+    persistStore, 
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER, 
+} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import { contactsReducer } from "./contactsSlice";
 import { filtersReducer } from "./filtersSlice";
 
-export const initialState = {
-    contacts:
-    {
-        list: [
-            {id: 'id-1', name: 'Rosie Simpson', tel: '459-12-56'},
-            {id: 'id-2', name: 'Hermione Kline', tel: '443-89-12'},
-            {id: 'id-3', name: 'Eden Clements', tel: '645-17-79'},
-            {id: 'id-4', name: 'Annie Copeland', tel: '227-91-26'}
-          ],
-        
-    },
-    filters: {
-        name: ""
-    }
-    
-}
-
-export const rootReducer = combineReducers({
-    contacts: contactsReducer,
+const rootReducer = combineReducers({
+    contacts:contactsReducer,
     filters: filtersReducer,
-    
 })
 
-const enhancer = devToolsEnhancer()
+const persistConfig = {
+    key: 'contacts',
+    storage,
+    whitelist: ['contacts']
+  }
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = createStore(rootReducer, enhancer)
+export const store = configureStore({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],}
+      })
+})
 
+export const persistor = persistStore(store)
