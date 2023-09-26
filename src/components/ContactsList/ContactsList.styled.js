@@ -24,6 +24,7 @@ border: none;
 background-color: #FF6666;
 margin-left: 8px;
 height: 30px;
+cursor: pointer;
 `
 
 

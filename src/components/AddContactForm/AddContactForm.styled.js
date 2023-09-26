@@ -23,6 +23,7 @@ border: none;
 background-color: #86E9FF;
 width: 150px;
 height: 40px;
+cursor: pointer;
 `
 const StyledError = styled(ErrorMessage)`
 color: red;
