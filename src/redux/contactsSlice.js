@@ -16,6 +16,10 @@ const contactsSlice = createSlice({
     reducers:{
         addContact: {
             reducer(state, action){
+                if(state.find(contact => contact.name === action.payload.name)){
+                    alert(`${action.payload.name} is already in your phonebook`);
+                    return;
+                  }
             state.push(action.payload)
             }
         },
